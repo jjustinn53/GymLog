@@ -92,5 +92,6 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repInputEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/repInputEditText"
+        android:id="@+id/logButton"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
