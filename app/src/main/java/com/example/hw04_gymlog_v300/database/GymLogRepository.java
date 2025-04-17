@@ -1,9 +1,9 @@
-package com.example.hw04_gymlog_v300.Database;
+package com.example.hw04_gymlog_v300.database;
 
 import android.app.Application;
 import android.util.Log;
 
-import com.example.hw04_gymlog_v300.Database.entities.GymLog;
+import com.example.hw04_gymlog_v300.database.entities.GymLog;
 import com.example.hw04_gymlog_v300.MainActivity;
 
 import java.util.ArrayList;
@@ -18,15 +18,31 @@ public class GymLogRepository {
     public GymLogRepository(Application application) {
         GymLogDatabase db = GymLogDatabase.getDatabase(application);
         this.gymLogDAO = db.gymLogDAO();
-        this.alllogs = this.gymLogDAO.getAllRecords();
+        this.alllogs = (ArrayList<GymLog>) this.gymLogDAO.getAllRecords();
     }
 
+    public static GymLogRepository getRepository(Application application){
+        Future<GymLogRepository> future = GymLogDatabase.databaseWriteExecutor.submit(
+                new Callable<GymLogRepository>() {
+                    @Override
+                    public GymLogRepository call() throws Exception {
+                        return new GymLogRepository(application);
+                    }
+                }
+        );
+        try{
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.i(MainActivity.TAG, "Problem getting GymLogRepository, thread error");
+        }
+        return null;
+    }
     public ArrayList<GymLog> getAllLogs() {
         Future<ArrayList<GymLog>> future = GymLogDatabase.databaseWriteExecutor.submit(
                 new Callable<ArrayList<GymLog>>() {
                     @Override
                     public ArrayList<GymLog> call() throws Exception {
-                        return gymLogDAO.getAllRecords();
+                        return (ArrayList<GymLog>) gymLogDAO.getAllRecords();
                     }
                 }
         );
