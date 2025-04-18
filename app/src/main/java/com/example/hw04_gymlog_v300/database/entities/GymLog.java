@@ -25,6 +25,17 @@ public class GymLog {
     }
 
     @Override
+    public String toString() {
+        return "GymLog{" +
+                "id=" + id +
+                ", exercise='" + exercise + '\'' +
+                ", weight=" + weight +
+                ", reps=" + reps +
+                ", date=" + date +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof GymLog)) return false;
         GymLog gymLog = (GymLog) o;

@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         String currentInfo = binding.logDisplayTextView.getText().toString();
         String newDisplay = String.format(Locale.US,"Exercise:%s%nWeight:%.2f%nReps%d%n-=-=-=-=-%n%s",mExercise,mWeight,mReps, currentInfo);
         binding.logDisplayTextView.setText(newDisplay);
+
+        Log.i(TAG, repository.getAllLogs().toString());
     }
     private void getInformationFromDisplay() {
         mExercise = binding.exerciseInputEditText.getText().toString();
