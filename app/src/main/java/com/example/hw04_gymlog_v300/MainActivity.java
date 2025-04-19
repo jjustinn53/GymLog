@@ -50,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
                 updateDisplay();
             }
         });
+
+        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDisplay();
+            }
+        });
     }
 
     private void insertGymlogRecord() {
