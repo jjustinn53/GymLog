@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hw04_gymlog_v300.database.GymLogRepository;
 import com.example.hw04_gymlog_v300.database.entities.GymLog;
 import com.example.hw04_gymlog_v300.database.entities.User;
 import com.example.hw04_gymlog_v300.databinding.ActivityMainBinding;
+import com.example.hw04_gymlog_v300.viewHolders.GymLogAdapter;
+import com.example.hw04_gymlog_v300.viewHolders.GymLogViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.hw04_gymlog_v300.MAIN_ACTIVITY_USER_ID";
@@ -34,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private GymLogRepository repository;
 
+    private GymLogViewModel gymLogViewModel;
+
     public static final String TAG = "JN_GYMLOG";
     String mExercise = "";
     double mWeight = 0.0;
     int mReps = 0;
-
-    //TODO: ADD LOGIN INFO
     private int loggedInUserId = -1;
     private User user;
 
@@ -47,30 +50,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        gymLogViewModel = new ViewModelProvider(this).get(GymLogViewModel.class);
+
+        RecyclerView recyclerView = binding.logDisplayRecyclerView;
+        final GymLogAdapter adapter = new GymLogAdapter(new GymLogAdapter.GymLogDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         repository = GymLogRepository.getRepository(getApplication());
         loginUser(savedInstanceState);
+
+        gymLogViewModel.getAlllogsById(loggedInUserId).observe(this,gymlogs ->{
+            adapter.submitList(gymlogs);
+        });
 
         if(loggedInUserId == -1) {
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
             startActivity(intent);
         }
 
-        binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
-        updateDisplay();
-
         binding.logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getInformationFromDisplay();
                 insertGymlogRecord();
-
-                binding.logButton.postDelayed(() -> {
-                    updateDisplay();
-                }, 200);
             }
         });
     }
@@ -96,9 +102,6 @@ public class MainActivity extends AppCompatActivity {
             this.user = user;
             if (user != null) {
                 invalidateOptionsMenu();
-            } else {
-                //TODO: verify if issue
-                //logout();
             }
         });
 
@@ -188,20 +191,6 @@ public class MainActivity extends AppCompatActivity {
         repository.insertGymLog(log);
     }
 
-
-    private void updateDisplay() {
-        ArrayList<GymLog> alllogs = repository.getAllLogsByUserId(loggedInUserId);
-
-        if(alllogs.isEmpty()) {
-            binding.logDisplayTextView.setText(R.string.nothing_to_show_time_to_hit_the_gym);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for(GymLog log: alllogs) {
-            sb.append(log);
-        }
-        binding.logDisplayTextView.setText(sb.toString());
-    }
     private void getInformationFromDisplay() {
         mExercise = binding.exerciseInputEditText.getText().toString();
 
