@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
         updateDisplay();
 

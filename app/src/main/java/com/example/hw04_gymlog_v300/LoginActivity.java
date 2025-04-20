@@ -40,18 +40,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private void verifyUser() {
         String username = binding.userNameLoginEditText.getText().toString();
+
         if (username.isEmpty()) {
             toastMaker("Username may not be blank");
             return;
         }
+
         LiveData<User> userObserver = repository.getUserByUserName(username);
+
         userObserver.observe(this, user -> {
             if (user != null) {
                 String password = binding.passwordLoginEditText.getText().toString();
-                SharedPreferences sharedPreferences = getApplication().getSharedPreferences(MainActivity.SHARED_PREFERENCE_USERID_KEY, Context.MODE_PRIVATE);
-                SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
-                sharedPrefEditor.putInt(MainActivity.SHARED_PREFERENCE_USERID_KEY, user.getId());
-                sharedPrefEditor.apply();
                 if (password.equals(user.getPassword())) {
                     startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(), user.getId()));
                 } else {
