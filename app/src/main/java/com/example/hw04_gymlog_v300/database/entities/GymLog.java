@@ -32,7 +32,7 @@ public class GymLog {
                 "weight: " + weight +
                 "\nreps: " + reps +
                 "\ndate: " + date.toString() + "\n" +
-                "=-=-=-=-=-=-=-=-=\n";
+                "=-=-=-=-=-=-=-=-=";
     }
 
     @Override
