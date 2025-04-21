@@ -11,6 +11,9 @@ import com.example.hw04_gymlog_v300.database.entities.GymLog;
 
 import java.util.List;
 
+/**
+ * @author Justin Nguyen
+ */
 @Dao
 public interface GymLogDAO {
 

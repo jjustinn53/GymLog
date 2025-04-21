@@ -18,6 +18,9 @@ import com.example.hw04_gymlog_v300.database.typeConverters.LocalDateTypeConvert
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Justin Nguyen
+ */
 @TypeConverters(LocalDateTypeConverter.class)
 @Database(entities = {GymLog.class, User.class}, version = 4, exportSchema = false)
 public abstract class GymLogDatabase extends RoomDatabase {

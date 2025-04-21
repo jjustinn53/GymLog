@@ -8,6 +8,9 @@ import com.example.hw04_gymlog_v300.database.GymLogDatabase;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * @author Justin Nguyen
+ */
 @Entity(tableName = GymLogDatabase.GYM_LOG_TABLE)
 public class GymLog {
     @PrimaryKey(autoGenerate = true)
