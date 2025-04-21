@@ -29,8 +29,17 @@ public abstract class GymLogDatabase extends RoomDatabase {
     private static volatile GymLogDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
 
+    /**
+     * ExecutorService to avoid performing database operations on main thread,
+     * uses background thread
+     */
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /**
+     * Gets a single instance of the database, creates one if doesn't exist
+     * @param context Application context
+     * @return
+     */
     static GymLogDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (GymLogDatabase.class) {
@@ -46,6 +55,9 @@ public abstract class GymLogDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    /**
+     * Inserts default users when database is created, admin user and test user
+     */
     private static final RoomDatabase.Callback addDefaultValues = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
